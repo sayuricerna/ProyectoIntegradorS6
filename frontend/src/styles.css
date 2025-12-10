@@ -1,4 +1,59 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --c-blue-dark: #040638;
+  --c-blue-medium: #000568;
+  --c-blue-light: #000679;
+  --c-purple-dark: #574DB5;
+  --c-purple-medium: #9D8FEF;
+  --c-purple-light: #F7F7FC;
+  --c-black: #000000;
+  --c-gray: #9a9a9a;
+  --c-white: #ffffff;
+}
+
+h1{
+    font-size: 40px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+h2{
+    font-size: 25px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+}
+h3{
+    font-size: 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+}
+p, a, li {
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+}
+
+.primary-button {
+    width: 100%;
+    height: 50px;
+    margin-top: 30px;
+    font-size: 1.1em;
+    background-color: var(--c-blue-medium);
+    color: var(--c-white);
+    text-transform: uppercase;
+    border-radius: 10px;
+    font-weight: 600;
+
+
+}
+
+.primary-button:hover{
+    background-color: var(--c-white-);
+    color: var(--c-blue-medium);
+    border: 2px solid var(--c-blue-medium);
+    border-radius: 10px;
+    font-weight: 600;
+}

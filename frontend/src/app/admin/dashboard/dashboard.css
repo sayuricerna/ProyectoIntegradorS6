@@ -1,0 +1,82 @@
+/* src/app/admin/dashboard/dashboard.component.css */
+
+.dashboard-header {
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.kpi-card {
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.kpi-title {
+    font-size: 1.1em;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.kpi-value {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #333; /* Color general */
+}
+
+.primary-color {
+    color: #0056b3; /* Azul primario para el valor total */
+}
+
+.risk-color {
+    color: #dc3545; /* Rojo para alertar Alto Riesgo */
+}
+
+.kpi-detail {
+    font-size: 0.9em;
+    color: #999;
+    margin-top: 5px;
+}
+
+/* --- Área de Gráficas --- */
+.chart-area {
+    display: grid;
+    grid-template-columns: 2fr 1.5fr; /* Una columna más ancha para el gráfico principal */
+    gap: 20px;
+}
+
+.chart-card {
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 400px;
+}
+
+.chart-title {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Simulación del Gráfico Circular */
+.chart-mock-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.pie-chart-mock {
+    width: 200px;
+    height: 200px;
+    background-color: #ff6384; /* Color rojo de la imagen */
+    border-radius: 50%;
+    /* Efecto de borde simple */
+    box-shadow: 0 0 0 15px rgba(255, 99, 132, 0.2); 
+}

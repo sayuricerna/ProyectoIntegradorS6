@@ -1,0 +1,29 @@
+<!-- admin-layout.component.html -->
+<div class="admin-layout">
+  <!-- Header -->
+  <header class="header">
+    <h1>Admin Dashboard</h1>
+  </header>
+
+  <div class="main-container">
+    <!-- Contenido principal -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Sidebar derecho plegable -->
+    <aside class="sidebar" [class.closed]="isSidebarClosed">
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        {{ isSidebarClosed ? '>' : '<' }}
+      </button>
+      <nav class="menu">
+        <a routerLink="/dashboard">Dashboard</a>
+        <a routerLink="/clients">Clientes</a>
+        <a routerLink="/reports">Reportes</a>
+        <a routerLink="/settings">Configuración</a>
+        <a routerLink="/manage-payments">Pagos</a>
+        <a routerLink="/register-sale">Registrar Venta</a>
+      </nav>
+    </aside>
+  </div>
+</div>

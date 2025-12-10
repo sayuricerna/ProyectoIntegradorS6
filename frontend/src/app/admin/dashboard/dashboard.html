@@ -1,0 +1,49 @@
+<!-- <p>dashboard works!</p>
+<nav>
+    <a routerLink="/admin/dashboard">dashboard</a> 
+    <a routerLink="/admin/clients">clients</a> 
+    <a routerLink="/admin/reports">reports</a>
+    <a routerLink="/admin/settings">settings</a>
+    <a routerLink="/admin/manage-payments">manage-payments</a>
+    <a routerLink="/admin/register-sale">register-sale</a>
+</nav> -->
+
+<div class="dashboard-header">
+    <h2>Dashboard de Gestión Predictiva</h2>
+</div>
+
+<div class="kpi-grid">
+    
+    <mat-card class="kpi-card mat-elevation-z1">
+        <div class="kpi-title">Total por Cobrar</div>
+        <div class="kpi-value primary-color">100.000 USD</div>
+        <div class="kpi-detail">Pendiente de Cobro Activo</div>
+    </mat-card>
+
+    <mat-card class="kpi-card mat-elevation-z1">
+        <div class="kpi-title">Clientes en Mora</div>
+        <div class="kpi-value">10</div>
+        <div class="kpi-detail">Clientes con retraso de pagos</div>
+    </mat-card>
+    
+    <mat-card class="kpi-card risk-card mat-elevation-z1">
+        <div class="kpi-title">Ventas de Alto Riesgo</div>
+        <div class="kpi-value risk-color">56</div>
+        <div class="kpi-detail">Ventas actuales con riesgo alto de morosidad</div>
+    </mat-card>
+</div>
+
+<div class="chart-area">
+    
+    <mat-card class="chart-card mat-elevation-z1">
+        <div class="chart-title">Distribución de Riesgo (Motor IA)</div>
+        <div class="chart-mock-container">
+            <div class="pie-chart-mock"></div>
+        </div>
+    </mat-card>
+
+    <mat-card class="chart-card mat-elevation-z1">
+        <div class="chart-title">Histórico de Cobranza vs. Meta</div>
+        <p class="placeholder-text">Contenido para el KPI DSO o Tasa de Morosidad</p>
+    </mat-card>
+</div>
