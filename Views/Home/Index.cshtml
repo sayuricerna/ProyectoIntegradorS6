@@ -1,0 +1,42 @@
+﻿@* @{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div> *@
+
+
+@{
+    ViewData["Title"] = "Panel de Control";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Dashboard Gerencial</h2>
+        <span class="badge bg-primary">Predictivo con IA</span>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3">
+                <p class="text-muted mb-1">Monto Total Pendiente</p>
+                <h3 class="fw-bold text-primary">$4.57M</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-0 p-3">
+                <p class="text-muted mb-1">Tasa de Morosidad</p>
+                <h3 class="fw-bold text-danger">73.43%</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body" style="height: 600px;">
+            <p class="text-center mt-5">Aquí se cargará el Dashboard de Power BI...</p>
+            @* <iframe title="Dashboard" width="100%" height="100%" src="TU_LINK_DE_POWERBI_AQUI" frameborder="0"></iframe> *@
+        </div>
+    </div>
+</div>

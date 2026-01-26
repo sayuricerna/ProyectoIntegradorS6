@@ -1,0 +1,45 @@
+﻿@model ProyectoIntegradorS6G7.Models.Credito
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h4 class="text-primary">Registrar Nueva Obligación</h4>
+            <div class="d-flex justify-content-between mt-3">
+                <div class="text-primary fw-bold">1. Datos</div>
+                <div class="text-muted">2. Análisis IA</div>
+                <div class="text-muted">3. Finalizar</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form asp-action="GuardarCredito" method="post">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>ID Obligación</label>
+                        <input asp-for="idObligacion" class="form-control" placeholder="#OBL-000" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>RUC del Cliente</label>
+                        <input asp-for="rucCliente" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Monto Total</label>
+                        <input asp-for="montoTotal" class="form-control" type="number" step="0.01" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Número de Cuotas</label>
+                        <input asp-for="cuotas" class="form-control" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label>Tasa de Interés (%)</label>
+                        <input asp-for="tasaInteres" class="form-control" />
+                    </div>
+                </div>
+
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">Siguiente: Analizar con IA <i class="bi bi-robot"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

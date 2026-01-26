@@ -1,0 +1,146 @@
+﻿@model ProyectoIntegradorS6G7.Models.Usuario
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Login - CobranzasPro</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: #f6f8fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+            .login-card h1 {
+                font-weight: 700;
+                margin-bottom: 5px;
+                color: #000679;
+            }
+
+            .login-card h1 span {
+                color: #2D35CB;
+            }
+
+            .login-card p {
+                color: #000000;
+                margin-bottom: 30px;
+
+            }
+
+        .form-label {
+            text-align: left;
+            display: block;
+            font-weight: 500;
+            color: #000679;
+        }
+
+        .form-control {
+            border-radius: 2px;
+            padding: 10px 12px;
+            color: #D4D4D4;
+            border: 2px solid #BDBDBD;
+     
+        }
+
+        .btn-login {
+            background: #000679;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+            .btn-login:hover {
+                background:white;
+                border: 2px solid #000679;
+                color:#000679;
+            }
+
+        .login-links {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+            .login-links a {
+                color: #6b7280;
+                text-decoration: none;
+            }
+
+                .login-links a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+
+        <h1>Cobranzas<span>Pro</span></h1>
+        <p>Portal de gestión predictiva</p>
+
+        @using (Html.BeginForm("Ingresar", "Cuenta", FormMethod.Post))
+        {
+            <div class="mb-3 text-start">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email"
+                       name="correo"
+                       class="form-control"
+                       placeholder="email@gmail.com"
+                       required />
+            </div>
+
+            <div class="mb-3 text-start">
+                <label class="form-label">Contraseña</label>
+                <input type="password"
+                       name="clave"
+                       class="form-control"
+                       placeholder="Contraseña"
+                       required />
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger text-start">
+                    @ViewBag.Error
+                </div>
+            }
+
+            <button type="submit" class="btn btn-login">
+                INICIAR SESIÓN
+            </button>
+        }
+
+        <div class="login-links">
+            <div><a href="#">Olvidé mi contraseña</a></div>
+            <div> <a href="#">No tengo una cuenta | Soporte</a></div>
+        </div>
+
+    </div>
+
+</body>
+</html>
