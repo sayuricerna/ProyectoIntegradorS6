@@ -1,0 +1,48 @@
+﻿@model ProyectoIntegradorS6G7.Models.Cliente
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white p-4" style="background: linear-gradient(90deg, #1f2b6c, #4f6bed) !important;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-0">@Model.razonSocial</h2>
+                            <small class="opacity-75">RUC: @Model.ruc</small>
+                        </div>
+                        <span class="badge bg-white text-primary rounded-pill px-4 py-2">Estado: @Model.estado</span>
+                    </div>
+                </div>
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-muted small text-uppercase fw-bold mb-3">Información de Contacto</h5>
+                            <p class="mb-2"><strong>Responsable:</strong> @Model.contactoPrincipal</p>
+                            <p class="mb-2"><strong>Email:</strong> @Model.email</p>
+                            <p class="mb-4"><strong>Teléfono:</strong> @Model.telefono</p>
+
+                            <h5 class="text-muted small text-uppercase fw-bold mb-3">Credenciales de Acceso</h5>
+                            <div class="p-3 bg-light rounded-3">
+                                <p class="mb-1 small"><strong>Usuario:</strong> @Model.email</p>
+                                <p class="mb-0 small"><strong>Password Temporal:</strong> @Model.ruc</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center border-start">
+                            <h5 class="text-muted small text-uppercase fw-bold mb-3">Resumen Financiero</h5>
+                            <div class="py-4">
+                                <h1 class="display-4 fw-bold text-danger">@Model.saldoPendiente.ToString("C")</h1>
+                                <p class="text-muted">Deuda Total Pendiente</p>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a asp-controller="Creditos" asp-action="Crear" class="btn btn-outline-primary rounded-pill">Asignar Nuevo Crédito</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white p-4 text-end border-0">
+                    <a asp-action="Index" class="btn btn-secondary px-5 rounded-pill">Volver al listado</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

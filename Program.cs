@@ -9,7 +9,15 @@ builder.Services.AddControllersWithViews();
 var cn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(cn, ServerVersion.AutoDetect(cn)));
-
+// --- AGREGADO: Configuración de Sesiones ---
+builder.Services.AddDistributedMemoryCache(); // Necesario para almacenar la sesión en memoria
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // La sesión dura 30 minutos
+    options.Cookie.HttpOnly = true;                // Seguridad: impide acceso desde JS
+    options.Cookie.IsEssential = true;             // Necesaria para que la app funcione
+});
+// --------------------------------------------
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,11 +32,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Cuenta}/{action=Ingresar}/{id?}");
 
 app.Run();

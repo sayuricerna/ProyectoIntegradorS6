@@ -1,64 +1,14 @@
-﻿@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ProyectoIntegradorS6G7</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ProyectoIntegradorS6G7.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ProyectoIntegradorS6G7</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - ProyectoIntegradorS6G7 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html> *@
-
+﻿@using Microsoft.AspNetCore.Http
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> CobranzasPro</title>
+    <title>CobranzasPro</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-          rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
-]    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         :root {
             --primary: #1F2B6C;
@@ -76,7 +26,7 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* SIDEBAR */
+        /* SIDEBAR - Tu diseño original */
         #sidebar {
             width: 260px;
             background: #ffffff;
@@ -84,6 +34,8 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: fixed; /* Mantiene el nav fijo a la izquierda */
+            height: 100vh;
         }
 
         .logo-area {
@@ -93,12 +45,16 @@
 
             .logo-area h4 {
                 margin: 0;
-                color: var(--primary);
                 font-weight: 700;
+                color: #000679;
+            }
+
+            .logo-area span {
+                color: #2D35CB;
             }
 
             .logo-area small {
-                color: var(--text-muted);
+                color: #000000;
             }
 
         #sidebar .nav-link {
@@ -128,6 +84,7 @@
         #content {
             flex: 1;
             padding: 32px;
+            margin-left: 260px; /* Evita que el contenido se meta debajo del sidebar */
         }
 
         main {
@@ -135,46 +92,69 @@
             margin: auto;
         }
     </style>
-
 </head>
 <body>
+
+    @{
+        // Lógica de roles basada en tu imagen de la DB
+        var rol = (Context.Session.GetString("UsuarioRol") ?? "").Trim();
+        var email = Context.Session.GetString("UsuarioEmail") ?? "";
+        string controladorActual = ViewContext.RouteData.Values["Controller"]?.ToString();
+    }
 
     <nav id="sidebar">
         <div>
             <div class="logo-area">
-                <h4>CobranzasPro</h4>
+                <h4>Cobranzas<span>Pro</span></h4>
                 <small>Portal de gestión predictiva</small>
             </div>
 
             <div class="nav flex-column mt-2">
-                @{
-                    // Detectamos en qué controlador estamos
-                    string controladorActual = ViewContext.RouteData.Values["Controller"]?.ToString();
+                @if (rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
+                {
+                    <a class="nav-link @(controladorActual == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
+                        <span class="material-symbols-outlined">dashboard</span>Dashboard
+                    </a>
+
+                    <a class="nav-link @(controladorActual == "Clientes" ? "active" : "")" href="@Url.Action("Index", "Clientes")">
+                        <span class="material-symbols-outlined">account_circle</span> Clientes
+                    </a>
+
+                    <a class="nav-link @(controladorActual == "Creditos" ? "active" : "")" href="@Url.Action("Crear", "Creditos")">
+                        <span class="material-symbols-outlined">credit_card</span> Registrar Crédito
+                    </a>
+
+                    <a class="nav-link @(controladorActual == "Cobranzas" ? "active" : "")" href="@Url.Action("Index", "Cobranzas")">
+                        <span class="material-symbols-outlined">attach_money</span> Cobranzas
+                    </a>
+
+                    <a class="nav-link" href="#"><span class="material-symbols-outlined">add_chart</span> Reportes</a>
+                    <a class="nav-link" href="#"><span class="material-symbols-outlined">settings</span> Configuracion</a>
                 }
-
-                <a class="nav-link @(controladorActual == "Home" ? "active" : "")" href="@Url.Action("Index", "Home")">
-                    <span class="material-symbols-outlined">dashboard</span>Dashboard
-                </a>
-
-                <a class="nav-link @(controladorActual == "Clientes" ? "active" : "")" href="@Url.Action("Index", "Clientes")">
-                    <i class="bi bi-people"></i> Clientes
-                </a>
-
-                <a class="nav-link @(controladorActual == "Creditos" ? "active" : "")" href="@Url.Action("Crear", "Creditos")">
-                    <i class="bi bi-cash-stack"></i> Registrar Crédito
-                </a>
-
-                <a class="nav-link @(controladorActual == "Cobranzas" ? "active" : "")" href="@Url.Action("Index", "Cobranzas")">
-                    <i class="bi bi-wallet2"></i> Cobranzas
-                </a>
+                else
+                {
+                    <a class="nav-link @(controladorActual == "Clientes" ? "active" : "")" href="@Url.Action("Portal", "Clientes")">
+                        <span class="material-symbols-outlined">account_balance_wallet</span> Mi Estado de Cuenta
+                    </a>
+                    <a class="nav-link" href="#"><span class="material-symbols-outlined">history</span> Historial de Pagos</a>
+                    <a class="nav-link" href="#"><span class="material-symbols-outlined">support_agent</span> Soporte</a>
+                }
             </div>
         </div>
 
         <div class="sidebar-footer">
-            <i class="bi bi-person-circle"></i> Administrador
-            <a class="d-block text-danger mt-2" href="@Url.Action("Ingresar", "Cuenta")">
-                <i class="bi bi-box-arrow-right"></i> Salir
-            </a>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="material-symbols-outlined">
+                        @(rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase) ? "admin_panel_settings" : "person")
+                    </span>
+                    <span class="fw-bold">@rol</span>
+                </div>
+                <a class="text-danger" href="@Url.Action("Salir", "Cuenta")" title="Salir">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">@email</div>
         </div>
     </nav>
 
@@ -187,7 +167,5 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
-
 </html>

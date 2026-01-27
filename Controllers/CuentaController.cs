@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Http; 
 using Microsoft.AspNetCore.Mvc;
 using ProyectoIntegradorS6G7.Models;
 namespace ProyectoIntegradorS6G7.Controllers
@@ -19,31 +20,39 @@ namespace ProyectoIntegradorS6G7.Controllers
             return View();
         }
 
-        // Este procesa el formulario de Login
         [HttpPost]
         public IActionResult Ingresar(string correo, string clave)
         {
-            // Buscamos si existe el usuario en la DB
-            var usuario = _contexto.Usuarios
-                .FirstOrDefault(u => u.email == correo && u.password == clave);
+            var usuario = _contexto.Usuarios.FirstOrDefault(u => u.email == correo && u.password == clave);
 
             if (usuario != null)
             {
-                // Si es ADMIN, va al Dashboard global
-                if (usuario.rol == "Administrador")
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("UsuarioRol", usuario.rol); // Aquí guardará "Administrador"
+                HttpContext.Session.SetString("UsuarioEmail", usuario.email);
+
+                // CAMBIO AQUÍ: Usamos "Administrador" tal cual está en tu imagen
+                if (usuario.rol.Equals("Administrador", StringComparison.OrdinalIgnoreCase))
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                // Si es CLIENTE, va a su portal personal
                 else
                 {
-                    return RedirectToAction("MiPortal", "Clientes");
+                    HttpContext.Session.SetString("UsuarioRuc", usuario.rucAsociado ?? "");
+                    return RedirectToAction("Portal", "Clientes");
                 }
             }
 
-            // Si falla, regresa a la vista con un error
             ViewBag.Error = "Credenciales incorrectas";
             return View();
+        }
+
+
+        // Asegúrate de tener este método también para cerrar sesión
+        public IActionResult Salir()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Ingresar");
         }
     }
 }

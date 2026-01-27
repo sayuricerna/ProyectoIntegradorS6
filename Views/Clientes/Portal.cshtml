@@ -1,0 +1,61 @@
+﻿@model ProyectoIntegradorS6G7.Models.Cliente
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Mi Portal - CobranzasPro</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
+        <div class="container">
+            <span class="navbar-brand fw-bold">CobranzasPro | Mi Portal</span>
+            <a href="@Url.Action("Ingresar", "Cuenta")" class="btn btn-outline-light btn-sm">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                    <i class="bi bi-person-circle text-primary display-1 mb-3"></i>
+                    <h4>@Model.razonSocial</h4>
+                    <p class="text-muted">RUC: @Model.ruc</p>
+                    <hr>
+                    <div class="text-start">
+                        <small class="d-block text-muted">Contacto:</small>
+                        <strong>@Model.contactoPrincipal</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                    <h5 class="fw-bold">Resumen de Cuenta</h5>
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <p class="mb-0 text-muted">Saldo Pendiente</p>
+                            <h2 class="text-danger fw-bold">@Model.saldoPendiente.ToString("C")</h2>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-0 text-muted">Estado</p>
+                            <span class="badge @(Model.estado == "Mora" ? "bg-danger" : "bg-success") px-4 py-2">
+                                @Model.estado
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info border-0 rounded-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    Estimado cliente, puede realizar sus pagos mediante transferencia bancaria y reportarlos aquí.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
