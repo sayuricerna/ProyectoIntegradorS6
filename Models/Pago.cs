@@ -19,17 +19,16 @@ namespace ProyectoIntegradorS6G7.Models
         [Required]
         public DateTime fechaPago { get; set; } = DateTime.Now;
 
-        public string metodoPago { get; set; }
+        public string? metodoPago { get; set; }  
 
-        public string observaciones { get; set; }
+        public string? observaciones { get; set; } 
 
-        public string reciboNumero { get; set; }
+        public string? reciboNumero { get; set; }  
 
-        public string comprobanteRuta { get; set; } // ruta de la imagen
+        public string? comprobanteRuta { get; set; } 
 
-        public string firmaBase64 { get; set; } //firma digital
-
-        public string registradoPor { get; set; } // gmail del usuario
+        public string? firmaBase64 { get; set; } 
+        public string? registradoPor { get; set; } 
 
         public virtual Credito Credito { get; set; }
     }

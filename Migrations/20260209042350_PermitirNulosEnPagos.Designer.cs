@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoIntegradorS6G7.Models;
 
@@ -11,9 +12,11 @@ using ProyectoIntegradorS6G7.Models;
 namespace ProyectoIntegradorS6G7.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209042350_PermitirNulosEnPagos")]
+    partial class PermitirNulosEnPagos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,61 +24,6 @@ namespace ProyectoIntegradorS6G7.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Administrador", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<bool>("activo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("cedula")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("creadoPor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("fechaCreacion")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("nombreCompleto")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("puedeConfigurar")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeCrearCreditos")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeGestionarCobranzas")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeVerReportes")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("telefono")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Administradores");
-                });
 
             modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Cliente", b =>
                 {
@@ -115,62 +63,6 @@ namespace ProyectoIntegradorS6G7.Migrations
                     b.HasKey("id");
 
                     b.ToTable("Clientes");
-                });
-
-            modelBuilder.Entity("ProyectoIntegradorS6G7.Models.ConfiguracionIA", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("actualizadoPor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("cuotasMaximasPorDefecto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("cuotasMinimasPorDefecto")
-                        .HasColumnType("int");
-
-                    b.Property<int>("diasParaMorosidad")
-                        .HasColumnType("int");
-
-                    b.Property<int>("diasParaRiesgoAlto")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("fechaActualizacion")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal>("interesMaximo")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("interesMinimo")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("interesRiesgoAlto")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("interesRiesgoBajo")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("interesRiesgoMedio")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("umbralRiesgoAlto")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("umbralRiesgoBajo")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<decimal>("umbralRiesgoMedio")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("id");
-
-                    b.ToTable("ConfiguracionIA");
                 });
 
             modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Credito", b =>
@@ -229,6 +121,7 @@ namespace ProyectoIntegradorS6G7.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("firmaBase64")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("idObligacion")
@@ -236,6 +129,7 @@ namespace ProyectoIntegradorS6G7.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("metodoPago")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("montoPagado")
@@ -245,12 +139,15 @@ namespace ProyectoIntegradorS6G7.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("observaciones")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("reciboNumero")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("registradoPor")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("id");

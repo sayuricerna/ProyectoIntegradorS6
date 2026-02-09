@@ -1,28 +1,91 @@
 ﻿@model IEnumerable<ProyectoIntegradorS6G7.Models.Pago>
 
 <div class="container py-4">
-    <h3>Historial de Pagos - @ViewBag.Credito.idObligacion</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold">Historial de Pagos</h3>
+            <p class="text-muted">Crédito: @ViewBag.Credito?.idObligacion</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-3">
+            <i class="bi bi-arrow-left me-2"></i> Volver a Cobranzas
+        </a>
+    </div>
 
-    @foreach (var pago in Model)
+    @if (!Model.Any())
     {
-        <div class="card mb-3 p-4">
-            <h5>Cuota #@pago.numeroCuota - $@pago.montoPagado</h5>
-            <p>Fecha: @pago.fechaPago.ToString("dd/MM/yyyy")</p>
-            <p>Método: @pago.metodoPago</p>
-            <p>Recibo: @pago.reciboNumero</p>
-
-            @if (!string.IsNullOrEmpty(pago.comprobanteRuta))
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Este crédito aún no tiene pagos registrados.
+        </div>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var pago in Model)
             {
-                <a href="@pago.comprobanteRuta" target="_blank" class="btn btn-sm btn-primary">
-                    📸 Ver Comprobante
-                </a>
-            }
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5 class="fw-bold text-primary">Cuota #@pago.numeroCuota</h5>
+                                <small class="text-muted">@pago.fechaPago.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            <span class="badge bg-success px-3 py-2">
+                                <i class="bi bi-check-circle me-1"></i> Pagado
+                            </span>
+                        </div>
 
-            @if (!string.IsNullOrEmpty(pago.firmaBase64))
-            {
-                <div class="mt-3">
-                    <p class="small text-muted">Firma del cliente:</p>
-                    <img src="@pago.firmaBase64" class="border" style="max-height: 100px;">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <small class="text-muted">Monto Pagado</small>
+                                <p class="fw-bold fs-4 text-success mb-0">$@pago.montoPagado.ToString("N2")</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Método</small>
+                                <p class="fw-bold mb-0">
+                                    <i class="bi bi-@(pago.metodoPago == "Efectivo" ? "cash" : pago.metodoPago == "Transferencia" ? "bank" : "credit-card") me-1"></i>
+                                    @pago.metodoPago
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Recibo</small>
+                                <p class="fw-bold text-primary mb-0">@pago.reciboNumero</p>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted">Registrado por</small>
+                                <p class="small mb-0">@(pago.registradoPor ?? "Sistema")</p>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(pago.observaciones))
+                            {
+                                <div class="col-12">
+                                    <small class="text-muted">Observaciones:</small>
+                                    <p class="small mb-0">@pago.observaciones</p>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(pago.comprobanteRuta))
+                            {
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                    <a href="@pago.comprobanteRuta" target="_blank" class="btn btn-sm btn-outline-primary rounded-3">
+                                        <i class="bi bi-file-image me-1"></i> Ver Comprobante
+                                    </a>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(pago.firmaBase64))
+                            {
+                                <div class="col-12">
+                                    <hr class="my-2">
+                                    <small class="text-muted d-block mb-2">Firma del Cliente:</small>
+                                    <div class="border rounded-3 p-2 bg-light">
+                                        <img src="@pago.firmaBase64" class="img-fluid" style="max-height: 100px;">
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             }
         </div>

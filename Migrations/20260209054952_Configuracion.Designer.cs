@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoIntegradorS6G7.Models;
 
@@ -11,9 +12,11 @@ using ProyectoIntegradorS6G7.Models;
 namespace ProyectoIntegradorS6G7.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209054952_Configuracion")]
+    partial class Configuracion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,7 +120,7 @@ namespace ProyectoIntegradorS6G7.Migrations
                     b.ToTable("Clientes");
                 });
 
-            modelBuilder.Entity("ProyectoIntegradorS6G7.Models.ConfiguracionIA", b =>
+            modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Configuracion", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -170,7 +173,7 @@ namespace ProyectoIntegradorS6G7.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ConfiguracionIA");
+                    b.ToTable("Configuracion");
                 });
 
             modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Credito", b =>

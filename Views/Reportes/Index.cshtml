@@ -1,0 +1,172 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="container-fluid py-4" style="background-color: #f4f7fe; min-height: 100vh;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">Reportes y Análisis de KPIs</h2>
+            <p class="text-muted">Supervisión estratégica y exportación de indicadores clave de rendimiento.</p>
+        </div>
+        <button class="btn btn-outline-primary rounded-3">
+            <i class="bi bi-funnel me-2"></i> Filtros Globales
+        </button>
+    </div>
+
+    <!-- KPIs Cards -->
+    <div class="row g-3 mb-4">
+
+        <!-- KPI 1: IVAR -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-danger bg-opacity-10 p-3">
+                        <i class="bi bi-exclamation-triangle text-danger fs-3"></i>
+                    </div>
+                    <span class="badge bg-danger-subtle text-danger px-3 py-2">RIESGO ALTO</span>
+                </div>
+                <h6 class="text-muted small mb-2">Índice de Ventas de Alto Riesgo (IVAR)</h6>
+                <h2 class="fw-bold mb-1">12.5%</h2>
+                <small class="text-danger">
+                    <i class="bi bi-arrow-down me-1"></i> -1.2%
+                </small>
+                <p class="small text-muted mt-2 mb-3">
+                    Porcentaje de ventas realizadas a clientes con score crediticio bajo o historial de morosidad reciente.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI 2: Tasa de Morosidad -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3">
+                        <i class="bi bi-info-circle text-warning fs-3"></i>
+                    </div>
+                    <span class="badge bg-warning-subtle text-warning px-3 py-2">CRÍTICO</span>
+                </div>
+                <h6 class="text-muted small mb-2">Tasa de Morosidad Global</h6>
+                <h2 class="fw-bold mb-1">8.3%</h2>
+                <small class="text-success">
+                    <i class="bi bi-arrow-down me-1"></i> -0.5%
+                </small>
+                <p class="small text-muted mt-2 mb-3">
+                    Proporción de la cartera total que se encuentra vencida por más de 30 días sobre el total de cuentas por cobrar.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI 3: Monto Pendiente -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3">
+                        <i class="bi bi-cash-stack text-primary fs-3"></i>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2">FINANCIERO</span>
+                </div>
+                <h6 class="text-muted small mb-2">Monto Total Pendiente en Mora</h6>
+                <h2 class="fw-bold mb-1">$1.2M <small class="text-muted fs-6">USD</small></h2>
+                <small class="text-muted">Sin cambios</small>
+                <p class="small text-muted mt-2 mb-3">
+                    Valor monetario acumulado de todas las facturas vencidas y no cobradas al cierre del período actual.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI 4: Pérdidas por Incobrables -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-danger bg-opacity-10 p-3">
+                        <i class="bi bi-graph-down-arrow text-danger fs-3"></i>
+                    </div>
+                    <span class="badge bg-danger-subtle text-danger px-3 py-2">PÉRDIDAS</span>
+                </div>
+                <h6 class="text-muted small mb-2">Tasa de Pérdidas por Incobrables</h6>
+                <h2 class="fw-bold mb-1">2.1%</h2>
+                <small class="text-success">
+                    <i class="bi bi-arrow-up me-1"></i> +0.0%
+                </small>
+                <p class="small text-muted mt-2 mb-3">
+                    Porcentaje de deuda que ha sido catalogada definitivamente como incobrable respecto al total facturado.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI 5: Tiempo de Aplicación -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-info bg-opacity-10 p-3">
+                        <i class="bi bi-clock text-info fs-3"></i>
+                    </div>
+                    <span class="badge bg-info-subtle text-info px-3 py-2">EFICIENCIA</span>
+                </div>
+                <h6 class="text-muted small mb-2">Tiempo Promedio de Aplicación de Pago</h6>
+                <h2 class="fw-bold mb-1">4.5h</h2>
+                <small class="text-warning">
+                    <i class="bi bi-arrow-up me-1"></i> +1.2h
+                </small>
+                <p class="small text-muted mt-2 mb-3">
+                    Tiempo medio transcurrido desde que se recibe un pago hasta que se refleja en el estado de cuenta del cliente.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+
+        <!-- KPI 6: Días de Atraso -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div class="rounded-circle bg-secondary bg-opacity-10 p-3">
+                        <i class="bi bi-calendar-event text-secondary fs-3"></i>
+                    </div>
+                    <span class="badge bg-secondary-subtle text-secondary px-3 py-2">GESTIÓN</span>
+                </div>
+                <h6 class="text-muted small mb-2">Promedio de Días de Atraso por Cliente</h6>
+                <h2 class="fw-bold mb-1">14 <small class="text-muted fs-6">días</small></h2>
+                <small class="text-danger">
+                    <i class="bi bi-arrow-up me-1"></i> +2
+                </small>
+                <p class="small text-muted mt-2 mb-3">
+                    Media de días que los clientes tardan en pagar después de la fecha de vencimiento de la factura.
+                </p>
+                <a href="#" class="btn btn-sm btn-primary rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet me-1"></i> Exportar a Hojas de cálculo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Power BI Embed -->
+    <div class="card border-0 shadow-sm rounded-4 p-0 overflow-hidden">
+        <div class="card-header bg-white p-4 border-bottom">
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-bar-chart me-2"></i>Dashboard Interactivo - Power BI
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <iframe width="100%"
+                    height="800"
+                    src="@ViewBag.PowerBIUrl"
+                    frameborder="0"
+                    allowFullScreen="true">
+            </iframe>
+        </div>
+    </div>
+</div>

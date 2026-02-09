@@ -81,7 +81,6 @@ namespace ProyectoIntegradorS6G7.Controllers
         }
         //public IActionResult GuardarCredito(Credito c)
         //{
-        //    // Limpiamos errores de validación para campos que generamos nosotros
         //    ModelState.Remove("idObligacion");
         //    ModelState.Remove("fechaRegistro");
 

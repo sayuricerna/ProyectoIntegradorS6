@@ -47,7 +47,7 @@ namespace ProyectoIntegradorS6G7.Controllers
                     var nuevoUsuario = new Usuario
                     {
                         email = c.email,
-                        password = c.ruc, // Usamos el RUC como password inicial
+                        password = c.ruc, 
                         rol = "Cliente",
                         rucAsociado = c.ruc
                     };

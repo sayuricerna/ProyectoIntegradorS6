@@ -1,0 +1,265 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model ProyectoIntegradorS6G7.Models.ConfiguracionIA
+
+<div class="container-fluid py-4" style="background-color: #f4f7fe; min-height: 100vh;">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h2 class="fw-bold text-primary">Configuración del Sistema</h2>
+        <p class="text-muted">Administra los parámetros de inteligencia artificial y tu perfil de administrador.</p>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-x-circle me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <!-- GESTIÓN DE PARÁMETROS DE IA -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-cpu text-primary fs-3"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Gestión de Parámetros de IA</h5>
+                        <small class="text-muted">Configura los límites que utiliza el motor de inteligencia artificial para calcular riesgos y penalizaciones.</small>
+                    </div>
+                </div>
+
+                <form asp-action="GuardarParametrosIA" method="post">
+
+                    <!-- TASAS DE INTERÉS -->
+                    <h6 class="fw-bold mb-3 text-primary">
+                        <i class="bi bi-percent me-2"></i>Tasas de Interés
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Interés Mínimo (%)</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="interesMinimo" step="0.1" class="form-control" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Interés Máximo (%)</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="interesMaximo" step="0.1" class="form-control" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-success">Riesgo Bajo</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="interesRiesgoBajo" step="0.1" class="form-control" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-warning">Riesgo Medio</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="interesRiesgoMedio" step="0.1" class="form-control" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-danger">Riesgo Alto</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="interesRiesgoAlto" step="0.1" class="form-control" required>
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- DÍAS DE MOROSIDAD -->
+                    <h6 class="fw-bold mb-3 text-primary">
+                        <i class="bi bi-calendar-x me-2"></i>Días para Considerar Morosidad
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Días para Morosidad</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="diasParaMorosidad" class="form-control" required>
+                                <span class="input-group-text">días</span>
+                            </div>
+                            <small class="text-muted">Después de este plazo, el cliente entra en mora</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Días para Riesgo Alto</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="diasParaRiesgoAlto" class="form-control" required>
+                                <span class="input-group-text">días</span>
+                            </div>
+                            <small class="text-muted">Riesgo crítico de incobrable</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- CUOTAS -->
+                    <h6 class="fw-bold mb-3 text-primary">
+                        <i class="bi bi-cash-stack me-2"></i>Parámetros de Cuotas
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Cuotas Mínimas</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="cuotasMinimasPorDefecto" class="form-control" required>
+                                <span class="input-group-text">meses</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Cuotas Máximas</label>
+                            <div class="input-group">
+                                <input type="number" asp-for="cuotasMaximasPorDefecto" class="form-control" required>
+                                <span class="input-group-text">meses</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary py-3 fw-bold rounded-3">
+                            <i class="bi bi-save me-2"></i> Guardar Parámetros IA
+                        </button>
+                    </div>
+
+                    @if (Model.fechaActualizacion != default(DateTime))
+                    {
+                        <div class="mt-3 text-center">
+                            <small class="text-muted">
+                                Última actualización: @Model.fechaActualizacion.ToString("dd/MM/yyyy HH:mm")
+                                por @Model.actualizadoPor
+                            </small>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+
+        <!-- GESTIÓN DE ADMINISTRADORES -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-people text-primary fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Administradores</h5>
+                        <small class="text-muted">Máximo 3 activos</small>
+                    </div>
+                </div>
+
+                <!-- Lista de Administradores -->
+                <div class="mb-3">
+                    @foreach (var admin in ViewBag.Administradores)
+                    {
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3 mb-2">
+                            <div>
+                                <div class="fw-bold">@admin.nombreCompleto</div>
+                                <small class="text-muted">@admin.email</small>
+                            </div>
+                            @if (admin.email != ViewBag.EmailActual)
+                            {
+                                <form asp-action="DesactivarAdministrador" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@admin.id">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('¿Desactivar este administrador?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Botón Crear Admin -->
+                <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalCrearAdmin"
+                        @(ViewBag.Administradores.Count >= 3 ? "disabled" : "")>
+                    <i class="bi bi-plus-lg me-2"></i> Crear Administrador
+                </button>
+            </div>
+
+            <!-- Info del Admin Actual -->
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h6 class="fw-bold mb-3">
+                    <i class="bi bi-person-circle me-2"></i>Tu Perfil
+                </h6>
+                <div class="mb-2">
+                    <small class="text-muted">Email</small>
+                    <p class="mb-0 fw-bold">@ViewBag.EmailActual</p>
+                </div>
+                <div class="mt-3">
+                    <a href="@Url.Action("Salir", "Cuenta")" class="btn btn-outline-danger w-100 rounded-3">
+                        <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR ADMINISTRADOR -->
+<div class="modal fade" id="modalCrearAdmin" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title"><i class="bi bi-person-plus me-2"></i>Nuevo Administrador</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="CrearAdministrador" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nombre Completo</label>
+                        <input type="text" name="nombreCompleto" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Cédula / ID</label>
+                        <input type="text" name="cedula" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email Corporativo</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Número de Celular</label>
+                        <input type="tel" name="telefono" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Contraseña Inicial</label>
+                        <input type="password" name="password" class="form-control" required minlength="6">
+                        <small class="text-muted">Mínimo 6 caracteres</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-2"></i> Crear Administrador
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

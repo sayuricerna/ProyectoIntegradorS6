@@ -91,11 +91,17 @@
                                 </span>
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-sm text-white px-3 py-2 rounded-3 shadow-sm"
-                                        style="background-color: #9A9CFF;"
-                                        onclick="abrirModalPago('@item.idObligacion')">
-                                    <i class="bi bi-cash-stack me-1"></i> Registrar Pago
-                                </button>
+                                <div class="btn-group">
+                                    <button class="btn btn-sm text-white px-3 py-2 rounded-3 shadow-sm"
+                                            style="background-color: #9A9CFF;"
+                                            onclick="abrirModalPago('@item.idObligacion')">
+                                        <i class="bi bi-cash-stack me-1"></i> Registrar Pago
+                                    </button>
+                                    <a asp-action="HistorialPagos" asp-route-idObligacion="@item.idObligacion"
+                                       class="btn btn-sm btn-outline-primary rounded-3">
+                                        <i class="bi bi-clock-history"></i> Historial
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
@@ -152,7 +158,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label small text-muted fw-bold">Método de Pago</label>
-                                <select id="inputMetodoPago" class="form-select border-0 bg-light rounded-3 py-2">
+                                <select id="inputMetodoPago" class="form-select border-0 bg-light rounded-3 py-2" onchange="toggleComprobante()">
                                     <option value="Efectivo">Efectivo</option>
                                     <option value="Transferencia">Transferencia Bancaria</option>
                                     <option value="Tarjeta">Tarjeta de Crédito/Débito</option>
@@ -166,12 +172,57 @@
                                 <label class="form-label small text-muted fw-bold">Observaciones</label>
                                 <textarea id="inputObservaciones" class="form-control border-0 bg-light rounded-3" rows="2"
                                           placeholder="Comentarios adicionales..."></textarea>
-                                <!-- Canvas para firma digital -->
-                                <canvas id="canvasFirma" width="600" height="200"></canvas>
-                                <button onclick="limpiarFirma()">Limpiar Firma</button>
+                                <!-- 📸 SECCIÓN DE COMPROBANTE -->
+                                <div class="col-12" id="seccionComprobante" style="display: none;">
+                                    <div class="card border-2 border-dashed rounded-4 p-3 mt-3" style="border-color: #4F6BED;">
+                                        <label class="form-label small text-muted fw-bold">
+                                            <i class="bi bi-image me-2"></i>Comprobante de Transferencia
+                                        </label>
+                                        <input type="file" id="inputComprobante" class="form-control"
+                                               accept="image/*,.pdf" onchange="previewComprobante(this)">
+                                        <small class="text-muted">Formatos: JPG, PNG, PDF (Max 5MB)</small>
 
-                                <!-- Input para comprobante -->
-                                <input type="file" id="inputComprobante" accept="image/*,.pdf">
+                                        <!-- Preview de imagen -->
+                                        <div id="previewComprobante" class="mt-3" style="display: none;">
+                                            <img id="imgPreview" src="" class="img-fluid rounded-3 shadow-sm" style="max-height: 200px;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ✍️ SECCIÓN DE FIRMA DIGITAL -->
+                                <div class="col-12" id="seccionFirma" style="display: none;">
+                                    <div class="card border-2 border-dashed rounded-4 p-3 mt-3" style="border-color: #4F6BED;">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <label class="form-label small text-muted fw-bold mb-0">
+                                                <i class="bi bi-pen me-2"></i>Firma del Cliente
+                                            </label>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="limpiarFirma()">
+                                                <i class="bi bi-eraser"></i> Limpiar Firma
+                                            </button>
+                                        </div>
+
+                                        <!-- Canvas con estilos visibles -->
+                                        <div class="canvas-wrapper" style="background: white; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 10px;">
+                                            <canvas id="canvasFirma"
+                                                    width="700"
+                                                    height="200"
+                                                    style="
+                                                    display: block;
+                                                    width: 100%;
+                                                    max-width: 700px;
+                                                    height: 200px;
+                                                    background-color: #ffffff;
+                                                    cursor: crosshair;
+                                                    touch-action: none;
+                                                "></canvas>
+                                        </div>
+
+                                        <small class="text-muted mt-2 d-block">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Dibuja tu firma con el mouse o con el dedo si usas dispositivo táctil
+                                        </small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -229,14 +280,127 @@
         let creditoSeleccionado = null;
         let cuotaSeleccionada = null;
 
-        // Abrir modal desde tabla
-        function abrirModalPago(idObligacion) {
-            document.getElementById('inputIdObligacion').value = idObligacion;
-            $('#modalRegistroPago').modal('show');
-            buscarCredito();
+        // 🖊️ VARIABLES PARA EL CANVAS
+        let canvas = null;
+        let ctx = null;
+        let dibujando = false;
+
+        // ✅ INICIALIZAR CUANDO EL DOM ESTÉ LISTO
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar a que el modal se muestre
+            const modalEl = document.getElementById('modalRegistroPago');
+            if (modalEl) {
+                modalEl.addEventListener('shown.bs.modal', function () {
+                    inicializarCanvas();
+                });
+            }
+        });
+
+        // 🎨 INICIALIZAR CANVAS
+        function inicializarCanvas() {
+            canvas = document.getElementById('canvasFirma');
+            if (!canvas) {
+                console.error('Canvas no encontrado');
+                return;
+            }
+
+            ctx = canvas.getContext('2d');
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // EVENTOS MOUSE
+            canvas.addEventListener('mousedown', function(e) {
+                dibujando = true;
+                const rect = canvas.getBoundingClientRect();
+                ctx.beginPath();
+                ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            });
+
+            canvas.addEventListener('mousemove', function(e) {
+                if (!dibujando) return;
+                const rect = canvas.getBoundingClientRect();
+                ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+                ctx.stroke();
+            });
+
+            canvas.addEventListener('mouseup', function() {
+                dibujando = false;
+            });
+
+            canvas.addEventListener('mouseout', function() {
+                dibujando = false;
+            });
+
+            // EVENTOS TOUCH (MÓVIL)
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                dibujando = true;
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                ctx.beginPath();
+                ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            });
+
+            canvas.addEventListener('touchmove', function(e) {
+                if (!dibujando) return;
+                e.preventDefault();
+                const rect = canvas.getBoundingClientRect();
+                const touch = e.touches[0];
+                ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                ctx.stroke();
+            });
+
+            canvas.addEventListener('touchend', function() {
+                dibujando = false;
+            });
+
+            console.log('✅ Canvas inicializado');
         }
 
-        // Buscar crédito y mostrar cuotas
+        // 🧹 LIMPIAR FIRMA
+        function limpiarFirma() {
+            if (!canvas || !ctx) {
+                inicializarCanvas();
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 🔄 MOSTRAR/OCULTAR COMPROBANTE Y FIRMA
+        function toggleComprobante() {
+            const metodo = document.getElementById('inputMetodoPago').value;
+            const mostrar = (metodo === 'Transferencia');
+
+            document.getElementById('seccionComprobante').style.display = mostrar ? 'block' : 'none';
+            document.getElementById('seccionFirma').style.display = mostrar ? 'block' : 'none';
+
+            if (mostrar) {
+                setTimeout(() => inicializarCanvas(), 100);
+            }
+        }
+
+        // 📸 PREVIEW DE COMPROBANTE
+        function previewComprobante(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imgPreview').src = e.target.result;
+                    document.getElementById('previewComprobante').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // 🔍 ABRIR MODAL
+        function abrirModalPago(idObligacion) {
+            document.getElementById('inputIdObligacion').value = idObligacion;
+            const modal = new bootstrap.Modal(document.getElementById('modalRegistroPago'));
+            modal.show();
+            setTimeout(() => buscarCredito(), 300);
+        }
+
+        // 🔎 BUSCAR CRÉDITO
         function buscarCredito() {
             const idObligacion = document.getElementById('inputIdObligacion').value;
 
@@ -253,7 +417,6 @@
                         document.getElementById('displayCliente').value =
                             `${data.credito.razonSocial} (RUC: ${data.credito.rucCliente})`;
 
-                        // Mostrar cuotas
                         const listaCuotas = document.getElementById('listaCuotas');
                         listaCuotas.innerHTML = '';
 
@@ -284,14 +447,165 @@
                 });
         }
 
-        // Seleccionar cuota
+        // ✅ SELECCIONAR CUOTA
         function seleccionarCuota(numero, monto) {
-            // Limpiar selección anterior
+            document.querySelectorAll('.cuota-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            cuotaSeleccionada = numero;
+            document.getElementById('inputMonto').value = monto.toFixed(2);
+        }
+
+        // 💾 CONFIRMAR PAGO
+        function confirmarPago() {
+            if (!creditoSeleccionado || !cuotaSeleccionada) {
+                Swal.fire('Atención', 'Debe seleccionar una cuota para pagar', 'warning');
+                return;
+            }
+
+            const metodoPago = document.getElementById('inputMetodoPago').value;
+
+            // VALIDAR TRANSFERENCIA
+            if (metodoPago === 'Transferencia') {
+                const comprobante = document.getElementById('inputComprobante').files[0];
+                if (!comprobante) {
+                    Swal.fire('Atención', 'Debe adjuntar el comprobante de transferencia', 'warning');
+                    return;
+                }
+
+                // VALIDAR FIRMA
+                if (!canvas || !ctx) {
+                    Swal.fire('Error', 'Canvas no inicializado', 'error');
+                    return;
+                }
+
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const canvasVacio = !imageData.data.some(channel => channel !== 0);
+
+                if (canvasVacio) {
+                    Swal.fire('Atención', 'Debe firmar el recibo de pago', 'warning');
+                    return;
+                }
+            }
+
+            // CREAR FORMDATA
+            const formData = new FormData();
+            formData.append('idObligacion', creditoSeleccionado.idObligacion);
+            formData.append('numeroCuota', cuotaSeleccionada);
+            formData.append('monto', document.getElementById('inputMonto').value);
+            formData.append('metodoPago', metodoPago);
+            formData.append('observaciones', document.getElementById('inputObservaciones').value);
+
+            // COMPROBANTE
+            const comprobante = document.getElementById('inputComprobante').files[0];
+            if (comprobante) {
+                formData.append('comprobante', comprobante);
+            }
+
+            // FIRMA
+            if (metodoPago === 'Transferencia' && canvas) {
+                const firmaBase64 = canvas.toDataURL('image/png');
+                formData.append('firmaBase64', firmaBase64);
+            }
+
+            // ENVIAR
+            fetch('/Cobranzas/RegistrarPago', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: '¡Pago Registrado!',
+                        html: `
+                            <p>${data.message}</p>
+                            <p class="fw-bold">Recibo: ${data.recibo}</p>
+                            ${data.comprobanteGuardado ? '<p class="text-success">✓ Comprobante guardado</p>' : ''}
+                            ${data.firmaGuardada ? '<p class="text-success">✓ Firma registrada</p>' : ''}
+                            ${data.creditoCompleto ? '<p class="text-success">✓ Crédito totalmente pagado</p>' : ''}
+                        `,
+                        icon: 'success',
+                        confirmButtonColor: '#1F2B6C'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Error', data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'No se pudo registrar el pago', 'error');
+            });
+        }
+    </script>
+}
+
+@* @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        let creditoSeleccionado = null;
+        let cuotaSeleccionada = null;
+
+        function abrirModalPago(idObligacion) {
+            document.getElementById('inputIdObligacion').value = idObligacion;
+            $('#modalRegistroPago').modal('show');
+            buscarCredito();
+        }
+
+        function buscarCredito() {
+            const idObligacion = document.getElementById('inputIdObligacion').value;
+
+            if (!idObligacion) {
+                Swal.fire('Atención', 'Ingrese un ID de obligación', 'warning');
+                return;
+            }
+
+            fetch(`/Cobranzas/ObtenerDetalleCuotas?idObligacion=${idObligacion}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        creditoSeleccionado = data.credito;
+                        document.getElementById('displayCliente').value =
+                            `${data.credito.razonSocial} (RUC: ${data.credito.rucCliente})`;
+
+                        const listaCuotas = document.getElementById('listaCuotas');
+                        listaCuotas.innerHTML = '';
+
+                        data.cuotas.forEach(cuota => {
+                            const div = document.createElement('div');
+                            div.className = 'col-md-3';
+                            div.innerHTML = `
+                                <div class="card cuota-card ${cuota.pagado ? 'pagado' : ''} border rounded-3 p-3 text-center"
+                                     onclick="${!cuota.pagado ? `seleccionarCuota(${cuota.numero}, ${cuota.monto})` : ''}">
+                                    <h6 class="fw-bold">Cuota ${cuota.numero}</h6>
+                                    <p class="mb-0 small text-muted">$${cuota.monto.toFixed(2)}</p>
+                                    <span class="badge ${cuota.pagado ? 'bg-success' : 'bg-warning'} mt-2">
+                                        ${cuota.estado}
+                                    </span>
+                                </div>
+                            `;
+                            listaCuotas.appendChild(div);
+                        });
+
+                        document.getElementById('detalleCuotas').style.display = 'block';
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'No se pudo obtener la información', 'error');
+                });
+        }
+
+        function seleccionarCuota(numero, monto) {
             document.querySelectorAll('.cuota-card').forEach(card => {
                 card.classList.remove('selected');
             });
 
-            // Marcar nueva selección
             event.currentTarget.classList.add('selected');
             cuotaSeleccionada = numero;
             document.getElementById('inputMonto').value = monto.toFixed(2);
@@ -319,7 +633,6 @@
 
         canvas.addEventListener('mouseup', () => dibujando = false);
 
-        // Touch para móviles
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             const touch = e.touches[0];
@@ -349,13 +662,11 @@
             formData.append('monto', document.getElementById('inputMonto').value);
             formData.append('metodoPago', document.getElementById('inputMetodoPago').value);
 
-            // Comprobante
             const comprobante = document.getElementById('inputComprobante').files[0];
             if (comprobante) {
                 formData.append('comprobante', comprobante);
             }
 
-            // Firma en base64
             formData.append('firmaBase64', canvas.toDataURL());
 
             fetch('/Cobranzas/RegistrarPago', {
@@ -370,7 +681,6 @@
             });
         }
 
-        // Confirmar pago
         function confirmarPago() {
             if (!creditoSeleccionado || !cuotaSeleccionada) {
                 Swal.fire('Atención', 'Debe seleccionar una cuota para pagar', 'warning');
@@ -415,4 +725,4 @@
             });
         }
     </script>
-}
+} *@
