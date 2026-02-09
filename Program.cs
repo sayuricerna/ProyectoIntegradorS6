@@ -6,10 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "comprobantes");
+if (!Directory.Exists(uploadsPath))
+{
+    Directory.CreateDirectory(uploadsPath);
+}
+
 var cn = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(cn, ServerVersion.AutoDetect(cn)));
-// --- AGREGADO: Configuración de Sesiones ---
+options.UseMySql(cn, ServerVersion.AutoDetect(cn)));
 builder.Services.AddDistributedMemoryCache(); // Necesario para almacenar la sesión en memoria
 builder.Services.AddSession(options =>
 {

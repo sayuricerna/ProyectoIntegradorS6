@@ -1,45 +1,352 @@
 ﻿@model ProyectoIntegradorS6G7.Models.Credito
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h4 class="text-primary">Registrar Nueva Obligación</h4>
-            <div class="d-flex justify-content-between mt-3">
-                <div class="text-primary fw-bold">1. Datos</div>
-                <div class="text-muted">2. Análisis IA</div>
-                <div class="text-muted">3. Finalizar</div>
-            </div>
+<div class="container-fluid py-4" style="background-color: #f8faff; min-height: 100vh;">
+
+    <div class="d-flex justify-content-center align-items-center mb-5 gap-4">
+        <div class="text-center">
+            <div id="circle1" class="step-circle active"></div>
+            <div class="step-text active">Paso 1: Datos del Cliente</div>
         </div>
-        <div class="card-body">
-            <form asp-action="GuardarCredito" method="post">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label>ID Obligación</label>
-                        <input asp-for="idObligacion" class="form-control" placeholder="#OBL-000" />
+        <div class="step-line"></div>
+        <div class="text-center">
+            <div id="circle2" class="step-circle"></div>
+            <div class="step-text">Paso 2: Detalles de la Venta</div>
+        </div>
+        <div class="step-line"></div>
+        <div class="text-center">
+            <div id="circle3" class="step-circle"></div>
+            <div class="step-text">Paso 3: Confirmar Venta a crédito</div>
+        </div>
+    </div>
+
+    <div id="pantallaRegistro">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-5 p-4 h-100">
+                    <h5 class="fw-bold mb-4" style="color: #1F2B6C;">Datos del Cliente</h5>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">RUC</label>
+                        <input type="text" asp-for="rucCliente" id="rucInput" class="form-control border-0 bg-light rounded-3 py-2" placeholder="1759596565">
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label>RUC del Cliente</label>
-                        <input asp-for="rucCliente" class="form-control" />
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Razón Social</label>
+                        <input type="text" id="razonSocial" class="form-control border-0 bg-light rounded-3 py-2" readonly placeholder="Tech Solutions S. A. C.">
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Monto Total</label>
-                        <input asp-for="montoTotal" class="form-control" type="number" step="0.01" />
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Contacto Principal</label>
+                        <p id="contactoPrincipal" class="fw-bold mb-0">—</p>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Número de Cuotas</label>
-                        <input asp-for="cuotas" class="form-control" />
+                    <button type="button" onclick="buscarCliente()" class="btn w-100 py-3 rounded-4 fw-bold shadow-sm" style="background-color: #5D5FEF; color: white;">
+                        <i class="bi bi-check-circle me-2"></i> CONFIRMAR
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div id="cardRiesgo" class="card border-0 shadow-sm rounded-5 p-4 mb-4 opacity-50">
+                    <h5 class="fw-bold mb-3" style="color: #1F2B6C;">Evaluación de Riesgo</h5>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="material-symbols-outlined text-danger fs-1">security</span>
+                        <h3 class="text-danger fw-bold m-0">NIVEL: ALTO</h3>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Tasa de Interés (%)</label>
-                        <input asp-for="tasaInteres" class="form-control" />
-                    </div>
+                    <small class="text-muted">Usuario sin historial crediticio <i class="bi bi-info-circle"></i></small>
                 </div>
 
-                <hr />
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Siguiente: Analizar con IA <i class="bi bi-robot"></i></button>
+                <div id="cardIA" class="card border-0 shadow-sm rounded-5 p-4 opacity-50">
+                    <h5 class="fw-bold mb-3" style="color: #1F2B6C;">Recomendación de IA</h5>
+                    <div class="d-flex gap-2">
+                        <span class="material-symbols-outlined text-danger">report</span>
+                        <p class="small">Este Cliente no tiene historial crediticio se recomienda hacer la venta con 7 cuotas y al 5% de interés</p>
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                        <button type="button" onclick="aplicarIA()" class="btn btn-sm text-white rounded-pill px-3" style="background: #9A9CFF;">Aceptar recomendación</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Confirmar manualmente</button>
+                    </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="col-md-4">
+                <div id="cardDetalles" class="card border-0 shadow-sm rounded-5 p-4 h-100 opacity-50">
+                    <h5 class="fw-bold mb-4" style="color: #1F2B6C;">Detalles del crédito</h5>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Monto</label>
+                        <input type="number" id="montoInput" class="form-control border-0 bg-light rounded-3 py-2" placeholder="15,000.00">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Cuotas (Meses)</label>
+                        <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
+                            <option value="1">1 mes</option>
+                            <option value="7">7 meses</option>
+                            <option value="12">12 meses</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small text-muted">Tasa de Interés</label>
+                        <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
+                            <option value="5">5%</option>
+                            <option value="10">10%</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="irAConfirmacion()" class="btn w-100 py-3 rounded-4 fw-bold shadow-sm" style="background-color: #000080; color: white;">
+                        <i class="bi bi-arrow-right-circle me-2"></i> CONTINUAR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantallaConfirmacion" style="display: none;">
+        <div class="card border-0 shadow-sm rounded-5 p-5 mx-auto" style="max-width: 1000px;">
+            <div class="d-flex align-items-center gap-3 mb-4 p-3 rounded-4" style="background: #fff5f5; border-left: 5px solid #dc3545;">
+                <span class="material-symbols-outlined text-danger fs-1">lock</span>
+                <div>
+                    <h2 class="text-danger fw-bold m-0">NIVEL DE RIESGO: ALTO</h2>
+                    <p class="small m-0 text-muted">La evaluación del historial crediticio indica una alta probabilidad de incumplimiento...</p>
+                </div>
+            </div>
+
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-4" style="color: #1F2B6C;">Datos del Cliente</h5>
+                    <div class="row g-3">
+                        <div class="col-6"><small class="text-muted">RUC</small><p id="confRuc" class="fw-bold"></p></div>
+                        <div class="col-6"><small class="text-muted">Número telefónico</small><p>028365284</p></div>
+                        <div class="col-12"><small class="text-muted">Razón Social</small><p class="fw-bold">Tech Solutions S. A. C.</p></div>
+                    </div>
+                    <div class="alert alert-light border-0 rounded-4 mt-4" style="background: #f1f4ff;">
+                        <i class="bi bi-info-circle me-2"></i> Las fechas de pago son cada 12 de cada mes, el <b>primer pago es el 12 de Enero del 2026.</b>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="fw-bold mb-4" style="color: #1F2B6C;">Detalles del crédito</h5>
+                    <div class="d-flex justify-content-between mb-2"><span>Capital</span><span id="confCapital" class="fw-bold"></span></div>
+                    <div class="d-flex justify-content-between mb-2"><span>Cuotas</span><span id="confCuotas"></span></div>
+                    <div class="d-flex justify-content-between mb-4"><span>Tasa de Interés</span><span id="confInteres"></span></div>
+
+                    <div class="text-center p-4 rounded-5" style="background: #f8faff; border: 2px dashed #5D5FEF;">
+                        <small class="text-muted">Cuota mensual a pagar</small>
+                        <h1 class="display-4 fw-bold" style="color: #1F2B6C;">$<span id="confCuotaMensual"></span>USD</h1>
+                        <small class="text-primary fw-bold" id="confDuracion"></small>
+                    </div>
+
+                    <form asp-action="GuardarCredito" method="post" class="mt-4">
+                        <input type="hidden" id="hiddenRuc" name="rucCliente">
+                        <input type="hidden" id="hiddenMonto" name="montoTotal">
+                        <input type="hidden" id="hiddenCuotas" name="cuotas">
+                        <input type="hidden" id="hiddenInteres" name="tasaInteres">
+                        <input type="hidden" name="nivelRiesgoIA" value="ALTO">
+                        <input type="hidden" name="recomendacionIA" value="IA recomienda 7 cuotas al 5%">
+
+                        <div class="d-flex gap-3">
+                            <button type="button" onclick="location.reload()" class="btn btn-outline-secondary w-100 py-3 rounded-4 fw-bold">CANCELAR</button>
+                            <button type="button" onclick="finalizarVenta()" class="btn w-100 py-3 rounded-4 fw-bold shadow-sm" style="background-color: #5D5FEF; color: white;">
+                                <i class="bi bi-check-circle me-2"></i> CONFIRMAR REGISTRO
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #ddd;
+        margin: 0 auto 5px;
+    }
+
+        .step-circle.active {
+            background: #1F2B6C;
+            border: 4px solid #9A9CFF;
+        }
+
+    .step-text {
+        font-size: 12px;
+        color: #aaa;
+    }
+
+        .step-text.active {
+            color: #1F2B6C;
+            font-weight: bold;
+        }
+
+    .step-line {
+        width: 80px;
+        height: 3px;
+        background: #ddd;
+        margin-bottom: 20px;
+    }
+
+    .rounded-5 {
+        border-radius: 2rem !important;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // 1. FUNCIÓN PARA BUSCAR CLIENTE (Paso 1)
+        function buscarCliente() {
+            const rucValue = document.getElementById('rucInput').value;
+
+            if (!rucValue) {
+                Swal.fire('Atención', 'Por favor ingrese un RUC', 'warning');
+                return;
+            }
+
+            // Petición al controlador
+            fetch(`/Creditos/BuscarClientePorRUC?ruc=${rucValue}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.encontrado) {
+                        // Rellenamos datos
+                        document.getElementById('contactoPrincipal').innerText = data.contacto;
+                        document.getElementById('razonSocial').value = data.razonSocial;
+
+                        // Activamos UI
+                        document.getElementById('cardRiesgo').classList.remove('opacity-50');
+                        document.getElementById('cardIA').classList.remove('opacity-50');
+                        document.getElementById('cardDetalles').classList.remove('opacity-50');
+                        document.getElementById('circle2').classList.add('active');
+
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Cliente encontrado',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    } else {
+                        Swal.fire('No encontrado', 'El RUC no existe en la base de datos.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
+                });
+        }
+
+        // 2. FUNCIÓN PARA APLICAR RECOMENDACIÓN IA
+        function aplicarIA() {
+            document.getElementById('cuotasInput').value = "7";
+            document.getElementById('interesInput').value = "5";
+            document.getElementById('montoInput').value = "12000";
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Sugerencia de IA aplicada',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        }
+
+        // 3. FUNCIÓN PARA IR A LA PANTALLA DE CONFIRMACIÓN (Paso 2 a 3)
+        function irAConfirmacion() {
+            const ruc = document.getElementById('rucInput').value;
+            const monto = parseFloat(document.getElementById('montoInput').value) || 0;
+            const cuotas = parseInt(document.getElementById('cuotasInput').value) || 1;
+            const interes = parseFloat(document.getElementById('interesInput').value) || 0;
+
+            if (monto <= 0) {
+                Swal.fire('Datos incompletos', 'Por favor, ingrese un monto válido.', 'info');
+                return;
+            }
+
+            // Cálculos
+            const montoFinal = monto + (monto * (interes / 100));
+            const cuotaMensual = montoFinal / cuotas;
+
+            // Llenar labels de la pantalla final
+            document.getElementById('confRuc').innerText = ruc;
+            document.getElementById('confCapital').innerText = monto.toLocaleString() + ".00 USD";
+            document.getElementById('confCuotas').innerText = cuotas + " meses";
+            document.getElementById('confInteres').innerText = interes + "%";
+            document.getElementById('confCuotaMensual').innerText = cuotaMensual.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            document.getElementById('confDuracion').innerText = `durante ${cuotas} meses`;
+
+            // Llenar campos ocultos para el FORM real
+            document.getElementById('hiddenRuc').value = ruc;
+            document.getElementById('hiddenMonto').value = monto; // Enviamos capital original
+            document.getElementById('hiddenCuotas').value = cuotas;
+            document.getElementById('hiddenInteres').value = interes;
+
+            // Intercambiar pantallas
+            document.getElementById('pantallaRegistro').style.display = 'none';
+            document.getElementById('pantallaConfirmacion').style.display = 'block';
+            document.getElementById('circle3').classList.add('active');
+        }
+
+        // 4. FUNCIÓN PARA ENVIAR EL FORMULARIO (Botón Final)
+        function finalizarVenta() {
+            // Verificar que los campos tengan datos
+            const ruc = document.getElementById('hiddenRuc').value;
+            const monto = document.getElementById('hiddenMonto').value;
+            const cuotas = document.getElementById('hiddenCuotas').value;
+            const interes = document.getElementById('hiddenInteres').value;
+
+            console.log('Datos a enviar:', { ruc, monto, cuotas, interes });
+
+            if (!ruc || !monto || !cuotas || !interes) {
+                Swal.fire('Error', 'Faltan datos por completar', 'error');
+                return;
+            }
+
+            // Enviar con AJAX para capturar errores
+            const form = document.querySelector('#pantallaConfirmacion form');
+            const formData = new FormData(form);
+
+            fetch('/Creditos/GuardarCredito', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: '¡Venta Registrada!',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonColor: '#1F2B6C'
+                    }).then(() => {
+                        window.location.href = '/Creditos/Index';
+                    });
+                } else {
+                    console.error('Errores de validación:', data.errors);
+                    console.log('Datos recibidos en servidor:', data.receivedData);
+
+                    let errorMsg = data.message + '\n\nCampos con error:\n';
+                    if (data.errors) {
+                        data.errors.forEach(err => {
+                            errorMsg += `- ${err.Field}: ${err.Errors.join(', ')}\n`;
+                        });
+                    }
+
+                    Swal.fire('Error de validación', errorMsg, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'No se pudo guardar el crédito', 'error');
+            });
+        }
+
+        // Mostrar alerta si el controlador responde con éxito
+        @if (TempData["Mensaje"] != null)
+        {
+                <text>
+                Swal.fire({
+                    title: '¡Venta Registrada!',
+                    text: '@TempData["Mensaje"]',
+                    icon: 'success',
+                    confirmButtonColor: '#1F2B6C'
+                });
+                </text>
+        }
+    </script>
+}

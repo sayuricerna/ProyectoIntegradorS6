@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoIntegradorS6G7.Models;
 
@@ -11,9 +12,11 @@ using ProyectoIntegradorS6G7.Models;
 namespace ProyectoIntegradorS6G7.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260209010935_AgregarTablaPagos")]
+    partial class AgregarTablaPagos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,16 +114,8 @@ namespace ProyectoIntegradorS6G7.Migrations
                     b.Property<string>("CreditoidObligacion")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<string>("comprobanteRuta")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("fechaPago")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("firmaBase64")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("idObligacion")
                         .IsRequired()
@@ -141,10 +136,6 @@ namespace ProyectoIntegradorS6G7.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("reciboNumero")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("registradoPor")
                         .IsRequired()
                         .HasColumnType("longtext");
 

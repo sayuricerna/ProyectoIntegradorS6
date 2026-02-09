@@ -1,45 +1,58 @@
-﻿@model ProyectoIntegradorS6G7.Models.Credito
+﻿@model IEnumerable<ProyectoIntegradorS6G7.Models.Credito>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
-            <h4 class="text-primary">Registrar Nueva Obligación</h4>
-            <div class="d-flex justify-content-between mt-3">
-                <div class="text-primary fw-bold">1. Datos</div>
-                <div class="text-muted">2. Análisis IA</div>
-                <div class="text-muted">3. Finalizar</div>
-            </div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">Gestión de Créditos</h2>
+            <p class="text-muted">Monitoreo de obligaciones y niveles de riesgo detectados por IA.</p>
         </div>
-        <div class="card-body">
-            <form asp-action="GuardarCredito" method="post">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label>ID Obligación</label>
-                        <input asp-for="idObligacion" class="form-control" placeholder="#OBL-000" />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label>RUC del Cliente</label>
-                        <input asp-for="rucCliente" class="form-control" />
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Monto Total</label>
-                        <input asp-for="montoTotal" class="form-control" type="number" step="0.01" />
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Número de Cuotas</label>
-                        <input asp-for="cuotas" class="form-control" />
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label>Tasa de Interés (%)</label>
-                        <input asp-for="tasaInteres" class="form-control" />
-                    </div>
-                </div>
+        <a asp-action="Crear" class="btn btn-primary px-4 rounded-3 shadow-sm" style="background-color: #000679;">
+            <i class="bi bi-plus-lg me-2"></i> REGISTRAR CRÉDITO
+        </a>
+    </div>
 
-                <hr />
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary">Siguiente: Analizar con IA <i class="bi bi-robot"></i></button>
-                </div>
-            </form>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light">
+                    <tr class="text-muted small text-uppercase">
+                        <th class="ps-4">ID Obligación</th>
+                        <th>RUC Cliente</th>
+                        <th>Monto Total</th>
+                        <th>Cuotas</th>
+                        <th>Riesgo IA</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody style="font-size: 14px;">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold">@item.idObligacion</td>
+                            <td>@item.rucCliente</td>
+                            <td class="fw-bold">@item.montoTotal.ToString("C")</td>
+                            <td>@item.cuotas meses</td>
+                            <td>
+                                <span class="badge rounded-pill @(item.nivelRiesgoIA == "ALTO" ? "bg-danger" : "bg-success") px-3">
+                                    <i class="bi bi-shield-lock me-1"></i> @item.nivelRiesgoIA
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-opacity-10 @(item.estado == "Pendiente" ? "bg-warning text-warning" : "bg-success text-success") px-3 border">
+                                    @item.estado
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a href="#" class="btn btn-sm btn-outline-secondary border-0"><i class="bi bi-eye"></i></a>
+                                    <a href="#" class="btn btn-sm btn-outline-primary border-0"><i class="bi bi-printer"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

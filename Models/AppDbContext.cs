@@ -11,5 +11,6 @@ namespace ProyectoIntegradorS6G7.Models
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Credito> Creditos { get; set; }
+        public DbSet<Pago> Pagos { get; set; }
     }
 }

@@ -1,0 +1,30 @@
+﻿@model IEnumerable<ProyectoIntegradorS6G7.Models.Pago>
+
+<div class="container py-4">
+    <h3>Historial de Pagos - @ViewBag.Credito.idObligacion</h3>
+
+    @foreach (var pago in Model)
+    {
+        <div class="card mb-3 p-4">
+            <h5>Cuota #@pago.numeroCuota - $@pago.montoPagado</h5>
+            <p>Fecha: @pago.fechaPago.ToString("dd/MM/yyyy")</p>
+            <p>Método: @pago.metodoPago</p>
+            <p>Recibo: @pago.reciboNumero</p>
+
+            @if (!string.IsNullOrEmpty(pago.comprobanteRuta))
+            {
+                <a href="@pago.comprobanteRuta" target="_blank" class="btn btn-sm btn-primary">
+                    📸 Ver Comprobante
+                </a>
+            }
+
+            @if (!string.IsNullOrEmpty(pago.firmaBase64))
+            {
+                <div class="mt-3">
+                    <p class="small text-muted">Firma del cliente:</p>
+                    <img src="@pago.firmaBase64" class="border" style="max-height: 100px;">
+                </div>
+            }
+        </div>
+    }
+</div>
