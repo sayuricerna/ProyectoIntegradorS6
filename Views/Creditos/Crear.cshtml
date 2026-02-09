@@ -74,18 +74,31 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small text-muted">Cuotas (Meses)</label>
-                        <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
+                        @* <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
                             <option value="1">1 mes</option>
                             <option value="7">7 meses</option>
                             <option value="12">12 meses</option>
+                        </select> *@
+                        <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
+                            @for (int i = ViewBag.CuotasMin; i <= ViewBag.CuotasMax; i++)
+                            {
+                                <option value="@i">@i meses</option>
+                            }
                         </select>
+
                     </div>
                     <div class="mb-4">
                         <label class="form-label small text-muted">Tasa de Interés</label>
-                        <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
+                        @* <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
                             <option value="5">5%</option>
                             <option value="10">10%</option>
+                        </select> *@
+                        <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
+                            <option value="@ViewBag.InteresBajo">@ViewBag.InteresBajo % (Riesgo bajo)</option>
+                            <option value="@ViewBag.InteresMedio">@ViewBag.InteresMedio % (Riesgo medio)</option>
+                            <option value="@ViewBag.InteresAlto">@ViewBag.InteresAlto % (Riesgo alto)</option>
                         </select>
+
                     </div>
                     <button type="button" onclick="irAConfirmacion()" class="btn w-100 py-3 rounded-4 fw-bold shadow-sm" style="background-color: #000080; color: white;">
                         <i class="bi bi-arrow-right-circle me-2"></i> CONTINUAR
@@ -233,8 +246,8 @@
 
         // 2. FUNCIÓN PARA APLICAR RECOMENDACIÓN IA
         function aplicarIA() {
-            document.getElementById('cuotasInput').value = "7";
-            document.getElementById('interesInput').value = "5";
+            document.getElementById('cuotasInput').value = "@ViewBag.CuotasMin";
+            document.getElementById('interesInput').value = "@ViewBag.InteresAlto";
             document.getElementById('montoInput').value = "12000";
             Swal.fire({
                 toast: true,

@@ -24,6 +24,15 @@ namespace ProyectoIntegradorS6G7.Controllers
         [HttpGet] // Cambiado a GET para que cargue la vista inicialmente
         public IActionResult Crear()
         {
+            var config = _contexto.ConfiguracionIA.FirstOrDefault();
+
+            ViewBag.CuotasMin = config?.cuotasMinimasPorDefecto ?? 1;
+            ViewBag.CuotasMax = config?.cuotasMaximasPorDefecto ?? 12;
+
+            ViewBag.InteresBajo = config?.interesRiesgoBajo ?? 5;
+            ViewBag.InteresMedio = config?.interesRiesgoMedio ?? 7;
+            ViewBag.InteresAlto = config?.interesRiesgoAlto ?? 10;
+
             return View();
         }
         
