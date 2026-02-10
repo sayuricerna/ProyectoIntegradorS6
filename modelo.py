@@ -12,7 +12,6 @@ import warnings
 warnings.filterwarnings('ignore')
 
 print("=" * 50)
-print("🤖 ENTRENAMIENTO DEL MODELO DE SCORING CREDITICIO")
 print("=" * 50)
 
 # CONEXIÓN A MYSQL CON SQLALCHEMY (para evitar el warning)
