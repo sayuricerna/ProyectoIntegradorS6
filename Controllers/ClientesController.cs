@@ -17,11 +17,6 @@ namespace ProyectoIntegradorS6G7.Controllers
         }
 
         // 1. Listado principal
-        //public IActionResult Index()
-        //{
-        //    var clientes = _contexto.Clientes.ToList();
-        //    return View(clientes);
-        //}
 
         // 2. Vista Crear Cliente
         public IActionResult Crear()
