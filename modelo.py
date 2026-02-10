@@ -14,10 +14,8 @@ warnings.filterwarnings('ignore')
 print("=" * 50)
 print("=" * 50)
 
-# CONEXIÓN A MYSQL CON SQLALCHEMY (para evitar el warning)
 engine = create_engine('mysql+mysqlconnector://root:@localhost/ProyectoIntegradorDB')
 
-# CONSULTA MEJORADA
 query = """
 SELECT 
     cl.ruc,
