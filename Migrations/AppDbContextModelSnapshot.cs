@@ -22,61 +22,6 @@ namespace ProyectoIntegradorS6G7.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Administrador", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<bool>("activo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("cedula")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("creadoPor")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("fechaCreacion")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("nombreCompleto")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("puedeConfigurar")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeCrearCreditos")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeGestionarCobranzas")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("puedeVerReportes")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("telefono")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Administradores");
-                });
-
             modelBuilder.Entity("ProyectoIntegradorS6G7.Models.Cliente", b =>
                 {
                     b.Property<int>("id")
@@ -268,19 +213,49 @@ namespace ProyectoIntegradorS6G7.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("id"));
 
+                    b.Property<bool>("activo")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("cedula")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("creadoPor")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("email")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("fechaCreacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("nombreCompleto")
                         .HasColumnType("longtext");
 
                     b.Property<string>("password")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<bool>("puedeConfigurar")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("puedeCrearCreditos")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("puedeGestionarCobranzas")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("puedeVerReportes")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("rol")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("rucAsociado")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("telefono")
                         .HasColumnType("longtext");
 
                     b.HasKey("id");

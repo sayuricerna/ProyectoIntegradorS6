@@ -13,6 +13,5 @@ namespace ProyectoIntegradorS6G7.Models
         public DbSet<Credito> Creditos { get; set; }
         public DbSet<Pago> Pagos { get; set; }
         public DbSet<ConfiguracionIA> ConfiguracionIA { get; set; }
-        public DbSet<Administrador> Administradores { get; set; }
     }
 }
