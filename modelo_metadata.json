@@ -1,0 +1,18 @@
+{
+  "fecha_entrenamiento": "2026-02-09T15:51:57.665115",
+  "num_registros": 2,
+  "accuracy": 1.0,
+  "features": [
+    "total_creditos",
+    "monto_promedio_credito",
+    "tasa_cumplimiento",
+    "tasa_puntualidad",
+    "dias_desde_primer_credito",
+    "saldoPendiente"
+  ],
+  "distribucion_riesgo": {
+    "BAJO": 0,
+    "MEDIO": 2,
+    "ALTO": 0
+  }
+}

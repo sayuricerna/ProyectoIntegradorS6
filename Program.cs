@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ProyectoIntegradorS6G7.Models;
+using ProyectoIntegradorS6G7.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;                // Seguridad: impide acceso desde JS
     options.Cookie.IsEssential = true;             // Necesaria para que la app funcione
 });
+builder.Services.AddScoped<IAService>();
+
 // --------------------------------------------
 var app = builder.Build();
 

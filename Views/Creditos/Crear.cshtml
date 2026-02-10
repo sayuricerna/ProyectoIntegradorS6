@@ -46,21 +46,25 @@
                 <div id="cardRiesgo" class="card border-0 shadow-sm rounded-5 p-4 mb-4 opacity-50">
                     <h5 class="fw-bold mb-3" style="color: #1F2B6C;">Evaluación de Riesgo</h5>
                     <div class="d-flex align-items-center gap-3">
-                        <span class="material-symbols-outlined text-danger fs-1">security</span>
-                        <h3 class="text-danger fw-bold m-0">NIVEL: ALTO</h3>
+                        <span id="iconoRiesgo" class="material-symbols-outlined text-danger fs-1">security</span>
+                        <h3 id="textoNivelRiesgo" class="text-danger fw-bold m-0">NIVEL: CALCULANDO...</h3>
                     </div>
-                    <small class="text-muted">Usuario sin historial crediticio <i class="bi bi-info-circle"></i></small>
+                    <small id="descripcionRiesgo" class="text-muted">Analizando historial crediticio...</small>
                 </div>
 
                 <div id="cardIA" class="card border-0 shadow-sm rounded-5 p-4 opacity-50">
                     <h5 class="fw-bold mb-3" style="color: #1F2B6C;">Recomendación de IA</h5>
                     <div class="d-flex gap-2">
-                        <span class="material-symbols-outlined text-danger">report</span>
-                        <p class="small">Este Cliente no tiene historial crediticio se recomienda hacer la venta con 7 cuotas y al 5% de interés</p>
+                        <span class="material-symbols-outlined text-primary">psychology</span>
+                        <p id="razonamientoIA" class="small">La IA analizará el historial del cliente...</p>
                     </div>
                     <div class="d-flex gap-2 mt-2">
-                        <button type="button" onclick="aplicarIA()" class="btn btn-sm text-white rounded-pill px-3" style="background: #9A9CFF;">Aceptar recomendación</button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Confirmar manualmente</button>
+                        <button type="button" onclick="aplicarIA()" class="btn btn-sm text-white rounded-pill px-3" style="background: #9A9CFF;">
+                            Aceptar recomendación
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                            Confirmar manualmente
+                        </button>
                     </div>
                 </div>
             </div>
@@ -74,31 +78,19 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label small text-muted">Cuotas (Meses)</label>
-                        @* <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
-                            <option value="1">1 mes</option>
-                            <option value="7">7 meses</option>
-                            <option value="12">12 meses</option>
-                        </select> *@
                         <select id="cuotasInput" class="form-select border-0 bg-light rounded-3 py-2">
-                            @for (int i = ViewBag.CuotasMin; i <= ViewBag.CuotasMax; i++)
-                            {
-                                <option value="@i">@i meses</option>
-                            }
                         </select>
-
+                        <small class="text-muted">
+                            Rango: @ViewBag.Config.cuotasMinimasPorDefecto - @ViewBag.Config.cuotasMaximasPorDefecto meses
+                        </small>
                     </div>
                     <div class="mb-4">
-                        <label class="form-label small text-muted">Tasa de Interés</label>
-                        @* <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
-                            <option value="5">5%</option>
-                            <option value="10">10%</option>
-                        </select> *@
+                        <label class="form-label small text-muted">Tasa de Interés (%)</label>
                         <select id="interesInput" class="form-select border-0 bg-light rounded-3 py-2">
-                            <option value="@ViewBag.InteresBajo">@ViewBag.InteresBajo % (Riesgo bajo)</option>
-                            <option value="@ViewBag.InteresMedio">@ViewBag.InteresMedio % (Riesgo medio)</option>
-                            <option value="@ViewBag.InteresAlto">@ViewBag.InteresAlto % (Riesgo alto)</option>
                         </select>
-
+                        <small class="text-muted">
+                            Rango: @ViewBag.Config.interesMinimo% - @ViewBag.Config.interesMaximo%
+                        </small>
                     </div>
                     <button type="button" onclick="irAConfirmacion()" class="btn w-100 py-3 rounded-4 fw-bold shadow-sm" style="background-color: #000080; color: white;">
                         <i class="bi bi-arrow-right-circle me-2"></i> CONTINUAR
@@ -202,6 +194,47 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+
+        const config = {
+            interesMinimo: @ViewBag.Config.interesMinimo,
+            interesMaximo: @ViewBag.Config.interesMaximo,
+            cuotasMinimas: @ViewBag.Config.cuotasMinimasPorDefecto,
+            cuotasMaximas: @ViewBag.Config.cuotasMaximasPorDefecto,
+            interesRiesgoBajo: @ViewBag.Config.interesRiesgoBajo,
+            interesRiesgoMedio: @ViewBag.Config.interesRiesgoMedio,
+            interesRiesgoAlto: @ViewBag.Config.interesRiesgoAlto
+        };
+        let recomendacionIA = null;
+        document.addEventListener('DOMContentLoaded', function() {
+            generarOpcionesCuotas();
+            generarOpcionesInteres();
+        });
+        function generarOpcionesCuotas() {
+            const select = document.getElementById('cuotasInput');
+            select.innerHTML = '';
+
+            for (let i = config.cuotasMinimas; i <= config.cuotasMaximas; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i + (i === 1 ? ' mes' : ' meses');
+                select.appendChild(option);
+            }
+        }
+
+        function generarOpcionesInteres() {
+            const select = document.getElementById('interesInput');
+            select.innerHTML = '';
+
+            // Generar opciones de interés en intervalos de 0.5%
+            for (let i = config.interesMinimo; i <= config.interesMaximo; i += 0.5) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i + '%';
+                select.appendChild(option);
+            }
+        }
+
+
         // 1. FUNCIÓN PARA BUSCAR CLIENTE (Paso 1)
         function buscarCliente() {
             const rucValue = document.getElementById('rucInput').value;
@@ -211,16 +244,18 @@
                 return;
             }
 
-            // Petición al controlador
+            // 1. Buscar datos básicos del cliente
             fetch(`/Creditos/BuscarClientePorRUC?ruc=${rucValue}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.encontrado) {
-                        // Rellenamos datos
                         document.getElementById('contactoPrincipal').innerText = data.contacto;
                         document.getElementById('razonSocial').value = data.razonSocial;
 
-                        // Activamos UI
+                        // 2. Obtener recomendación de IA
+                        obtenerRecomendacionIA(rucValue);
+
+                        // Activar UI
                         document.getElementById('cardRiesgo').classList.remove('opacity-50');
                         document.getElementById('cardIA').classList.remove('opacity-50');
                         document.getElementById('cardDetalles').classList.remove('opacity-50');
@@ -243,12 +278,64 @@
                     Swal.fire('Error', 'No se pudo conectar con el servidor', 'error');
                 });
         }
+         // OBTENER RECOMENDACIÓN DE IA
+        function obtenerRecomendacionIA(ruc) {
+            fetch(`/Creditos/ObtenerRecomendacionIA?ruc=${ruc}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        recomendacionIA = data;
+
+                        // Actualizar UI con nivel de riesgo
+                        const iconoRiesgo = document.getElementById('iconoRiesgo');
+                        const textoRiesgo = document.getElementById('textoNivelRiesgo');
+                        const descripcion = document.getElementById('descripcionRiesgo');
+
+                        if (data.nivelRiesgo === 'BAJO') {
+                            iconoRiesgo.classList.remove('text-danger', 'text-warning');
+                            iconoRiesgo.classList.add('text-success');
+                            textoRiesgo.classList.remove('text-danger', 'text-warning');
+                            textoRiesgo.classList.add('text-success');
+                            textoRiesgo.textContent = 'NIVEL: BAJO';
+                        } else if (data.nivelRiesgo === 'MEDIO') {
+                            iconoRiesgo.classList.remove('text-danger', 'text-success');
+                            iconoRiesgo.classList.add('text-warning');
+                            textoRiesgo.classList.remove('text-danger', 'text-success');
+                            textoRiesgo.classList.add('text-warning');
+                            textoRiesgo.textContent = 'NIVEL: MEDIO';
+                        } else {
+                            iconoRiesgo.classList.remove('text-success', 'text-warning');
+                            iconoRiesgo.classList.add('text-danger');
+                            textoRiesgo.classList.remove('text-success', 'text-warning');
+                            textoRiesgo.classList.add('text-danger');
+                            textoRiesgo.textContent = 'NIVEL: ALTO';
+                        }
+
+                        descripcion.textContent = data.totalCreditosAnteriores > 0
+                            ? `Cliente con ${data.totalCreditosAnteriores} crédito(s) anterior(es)`
+                            : 'Cliente sin historial crediticio';
+
+                        // Actualizar razonamiento de IA
+                        document.getElementById('razonamientoIA').textContent = data.razonamiento;
+
+                        console.log('Recomendación IA:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener recomendación:', error);
+                });
+        }
 
         // 2. FUNCIÓN PARA APLICAR RECOMENDACIÓN IA
         function aplicarIA() {
-            document.getElementById('cuotasInput').value = "@ViewBag.CuotasMin";
-            document.getElementById('interesInput').value = "@ViewBag.InteresAlto";
-            document.getElementById('montoInput').value = "12000";
+            if (!recomendacionIA) {
+                Swal.fire('Error', 'No hay recomendación disponible', 'error');
+                return;
+            }
+
+            document.getElementById('cuotasInput').value = recomendacionIA.cuotasRecomendadas;
+            document.getElementById('interesInput').value = recomendacionIA.interesRecomendado;
+
             Swal.fire({
                 toast: true,
                 position: 'top-end',

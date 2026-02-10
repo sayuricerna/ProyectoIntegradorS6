@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ProyectoIntegradorS6G7.Models;
-using System;
+﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using ProyectoIntegradorS6G7.Models;
+using ProyectoIntegradorS6G7.Services;
 
 namespace ProyectoIntegradorS6G7.Controllers
 {
@@ -9,45 +10,75 @@ namespace ProyectoIntegradorS6G7.Controllers
     {
         private readonly AppDbContext _contexto;
 
-        public CreditosController(AppDbContext contexto)
+        private readonly IAService _iaService;
+
+        public CreditosController(AppDbContext contexto, IAService iaService)
         {
             _contexto = contexto;
+            _iaService = iaService;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            // Obtenemos la lista de créditos desde la base de datos
             var listaCreditos = _contexto.Creditos.OrderByDescending(c => c.fechaRegistro).ToList();
             return View(listaCreditos);
         }
-        [HttpGet] // Cambiado a GET para que cargue la vista inicialmente
+        [HttpGet]
         public IActionResult Crear()
         {
             var config = _contexto.ConfiguracionIA.FirstOrDefault();
 
-            ViewBag.CuotasMin = config?.cuotasMinimasPorDefecto ?? 1;
-            ViewBag.CuotasMax = config?.cuotasMaximasPorDefecto ?? 12;
+            if (config == null)
+            {
+                config = new ConfiguracionIA();
+            }
 
-            ViewBag.InteresBajo = config?.interesRiesgoBajo ?? 5;
-            ViewBag.InteresMedio = config?.interesRiesgoMedio ?? 7;
-            ViewBag.InteresAlto = config?.interesRiesgoAlto ?? 10;
+            ViewBag.Config = config;
 
             return View();
         }
-        
-        
+        // IA CON HISTORIAL CREDITICIO 
+        [HttpGet]
+        public IActionResult ObtenerRecomendacionIA(string ruc)
+        {
+            try
+            {
+                var recomendacion = _iaService.ObtenerRecomendacion(ruc);
+                var config = _contexto.ConfiguracionIA.FirstOrDefault() ?? new ConfiguracionIA();
+
+                return Json(new
+                {
+                    success = true,
+                    nivelRiesgo = recomendacion.NivelRiesgo,
+                    interesRecomendado = recomendacion.InteresRecomendado,
+                    cuotasRecomendadas = recomendacion.CuotasRecomendadas,
+                    razonamiento = recomendacion.Razonamiento,
+                    usaModelo = recomendacion.UsaModelo,
+                    config = new
+                    {
+                        interesMinimo = config.interesMinimo,
+                        interesMaximo = config.interesMaximo,
+                        cuotasMinimas = config.cuotasMinimasPorDefecto,
+                        cuotasMaximas = config.cuotasMaximasPorDefecto
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
+        }
+
         [HttpPost]
         public IActionResult GuardarCredito(Credito c)
         {
             try
             {
-                // Limpiamos errores de validación para campos que generamos nosotros
                 ModelState.Remove("idObligacion");
                 ModelState.Remove("fechaRegistro");
                 ModelState.Remove("estado");
 
-                // 🔍 DEBUG: Ver errores de validación
                 if (!ModelState.IsValid)
                 {
                     var errors = ModelState
@@ -58,7 +89,6 @@ namespace ProyectoIntegradorS6G7.Controllers
                         })
                         .ToList();
 
-                    // Esto mostrará en la consola del navegador qué campos faltan
                     return Json(new
                     {
                         success = false,
@@ -88,34 +118,11 @@ namespace ProyectoIntegradorS6G7.Controllers
                 return Json(new { success = false, message = "Error: " + ex.Message });
             }
         }
-        //public IActionResult GuardarCredito(Credito c)
-        //{
-        //    ModelState.Remove("idObligacion");
-        //    ModelState.Remove("fechaRegistro");
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        c.idObligacion = "FACT-" + Guid.NewGuid().ToString().Substring(0, 5).ToUpper() + "-2026";
-        //        c.fechaRegistro = DateTime.Now;
-        //        c.estado = "Pendiente"; // Estado inicial para Cobranzas
-
-        //        _contexto.Creditos.Add(c);
-        //        _contexto.SaveChanges();
-
-        //        TempData["Mensaje"] = "¡Venta a crédito confirmada exitosamente!";
-        //        return RedirectToAction("Index");
-        //    }
-
-
-        //    // Si llegas aquí, algo falló en la validación
-        //    return View("Crear", c);
-        //}
 
 
         [HttpGet]
         public IActionResult BuscarClientePorRUC(string ruc)
         {
-            // Buscamos en la tabla Clientes
             var cliente = _contexto.Clientes.FirstOrDefault(c => c.ruc == ruc);
 
             if (cliente != null)
